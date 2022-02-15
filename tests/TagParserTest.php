@@ -5,49 +5,41 @@ namespace Tests;
 use App\TagParser;
 use PHPUnit\Framework\TestCase;
 
-// Given, When, Then
-// Arrange, Act, Assert
+/* Reach for data providers when you might encounter with:
+ "I am just gonna need the exact same logic for
+ every single test, the only difference is the 
+ input and the expected"
+
+ In order to use data providers, create a function 
+ and us the following syntax as a docblock comment:
+    @dataProvider <name_of_function>
+*/
+
 class TagParserTest extends TestCase
 {
-    protected $parser;
-
-    protected function setup(): void
+    public function tagsProvider()
     {
-        $this->parser = new TagParser;
+        return [
+            ["personal", ["personal"]],
+            ["personal, money, family", ["personal", "money", "family"]],
+            ["personal,money,family", ["personal", "money", "family"]],
+            ["personal | money | family", ["personal", "money", "family"]],
+            ["personal|money|family", ["personal", "money", "family"]],
+        ];
     }
 
-    public function test_it_parses_a_single_tag()
+    /**
+     * @dataProvider tagsProvider
+     */
+    public function test_it_parses_tags($input, $expected)
     {
-        $result = $this->parser->parse('personal');
-        $expected = ['personal'];
+        // Given or Arrange
+        $parser = new TagParser;
 
-        $this->assertSame($expected, $result);
-    }
+        // When or Act
+        $result = $parser->parse($input);
 
-    public function test_it_parses_a_comma_separated_list_of_tags()
-    {
-        $result = $this->parser->parse('personal, money, family');
-        $expected = ['personal', 'money', 'family'];
-
-        $this->assertSame($expected, $result);
-    }
-
-    public function test_it_parses_a_pipe_separated_list_of_tags()
-    {
-        $result = $this->parser->parse('personal | money | family');
-        $expected = ['personal', 'money', 'family'];
-
-        $this->assertSame($expected, $result);
-    }
-
-    public function test_spaces_are_optional()
-    {
-        $result = $this->parser->parse('personal,money,family');
-        $expected = ['personal', 'money', 'family'];
-        $this->assertSame($expected, $result);
-
-        $result = $this->parser->parse('personal|money|family');
-        $expected = ['personal', 'money', 'family'];
+        // Then or Assert
         $this->assertSame($expected, $result);
     }
 }
