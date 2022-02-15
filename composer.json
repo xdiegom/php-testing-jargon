@@ -1,0 +1,22 @@
+{
+  "name": "diegomelgar/testing-jargon",
+  "authors": [
+    {
+      "name": "Diego Melgar",
+      "email": "diego.melgar.sv@gmail.com"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  }
+}
