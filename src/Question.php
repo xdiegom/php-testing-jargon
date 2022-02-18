@@ -35,4 +35,9 @@ class Question
     {
         return $this->solution;
     }
+
+    public function answered()
+    {
+         return isset($this->answer);
+    }
 }

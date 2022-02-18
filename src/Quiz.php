@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 class Quiz
 {
     protected array $questions;
@@ -34,6 +33,10 @@ class Quiz
 
     public function grade()
     {
+        if (! $this->isCompleted()) {
+            throw new \Exception("Quiz is not completed");
+        }
+
         $correct = count($this->correctlyAnswerdQuestions());
 
         return ($correct / count($this->questions)) * 100;
@@ -41,7 +44,7 @@ class Quiz
 
     public function isCompleted()
     {
-        return 2;
+        return $this->answeredQuestions() === count($this->questions);
     }
 
     protected function correctlyAnswerdQuestions()
@@ -54,9 +57,11 @@ class Quiz
 
     protected function answeredQuestions()
     {
-        // return array_filter(
-        //     $this->questions,
-        //     fn ($question) => $question->
-        // );
+        return count(
+            array_filter(
+                $this->questions,
+                fn ($question) => $question->answered()
+            )
+        );
     }
 }

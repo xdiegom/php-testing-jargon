@@ -1,15 +1,19 @@
 <?php
 
+namespace Tests;
+
 use App\Question;
 use App\Quiz;
 use PHPUnit\Framework\TestCase;
 
 class QuizTest extends TestCase
 {
-    /** @test */
-    public function it_consists_of_questions()
+    /**
+     * @test
+     */
+    public function itConsistsOfQuestions()
     {
-        $quiz = new Quiz;
+        $quiz = new Quiz();
 
         $quiz->addQuestion(
             new Question("What is 2+2?", 4)
@@ -18,10 +22,12 @@ class QuizTest extends TestCase
         $this->assertCount(1, $quiz->questions());
     }
 
-    /** @test */
-    public function it_grades_a_perfect_quiz()
+    /**
+     * @test
+     */
+    public function itGradesAPerfectQuiz()
     {
-        $quiz = new Quiz;
+        $quiz = new Quiz();
 
         $quiz->addQuestion(new Question("What is 2+2?", 4));
 
@@ -32,10 +38,12 @@ class QuizTest extends TestCase
         $this->assertEquals(100, $quiz->grade());
     }
 
-    /** @test */
-    public function it_grades_a_failed_quiz()
+    /**
+     * @test
+     */
+    public function itGradesAFailedQuiz()
     {
-        $quiz = new Quiz;
+        $quiz = new Quiz();
 
         $quiz->addQuestion(new Question("What is 2+2?", 4));
 
@@ -46,10 +54,12 @@ class QuizTest extends TestCase
         $this->assertEquals(0, $quiz->grade());
     }
 
-    /** @test */
-    public function it_correctly_tracks_the_next_question_in_the_queue()
+    /**
+     * @test
+     */
+    public function itCorrectlyTracksTheNextQuestionInTheQueue()
     {
-        $quiz = new Quiz;
+        $quiz = new Quiz();
 
         $quiz->addQuestion(new Question("What is 2+2?", 4));
         $quiz->addQuestion(new Question("What is the capital of El Salvador?", "San Salvador"));
@@ -60,19 +70,17 @@ class QuizTest extends TestCase
         $this->assertEquals("San Salvador", $question->solution());
     }
 
-    /** @test */
-    public function it_cannot_be_graded_until_all_questions_have_been_answered()
+    /**
+     * @test
+     */
+    public function itCannotBeGradedUntilAllQuestionsHaveBeenAnswered()
     {
-        $quiz = new Quiz;
+        $quiz = new Quiz();
 
         $quiz->addQuestion(new Question("What is 2+2?", 4));
-        $quiz->addQuestion(new Question("What is the capital of El Salvador?", "San Salvador"));
 
-        $question = $quiz->nextQuestion();
-        $question->answer(1);
-        $question = $quiz->nextQuestion();
-        $question->answer("San Salvador");
+        $this->expectException(\Exception::class);
 
-        $this->assertEquals(2, $quiz->isCompleted());
+        $quiz->grade();
     }
 }
